@@ -1,0 +1,119 @@
+import java.util.Scanner;
+class BookNotAvailableException extends Exception {
+    public BookNotAvailableException(String message) {
+        super(message);
+    }
+}
+class Book {
+    int id;
+    String title;
+    boolean isIssued;
+    Book(int id, String title) {
+        this.id = id;
+        this.title = title;
+        this.isIssued = false;
+    }
+}
+class Library {
+    Book[] books = new Book[5];
+    int count = 0;
+    void addBook(int id, String title) {
+        books[count] = new Book(id, title);
+        count++;
+        System.out.println("Book added successfully.");
+    }
+    void issueBook(int id) throws BookNotAvailableException {
+
+        for (int i = 0; i < count; i++) {
+
+            if (books[i].id == id) {
+
+                if (books[i].isIssued) {
+                    throw new BookNotAvailableException("Book already issued!");
+                }
+
+                books[i].isIssued = true;
+                System.out.println("Book issued successfully.");
+                return;
+            }
+        }
+
+        throw new BookNotAvailableException("Book not found!");
+    }
+    void returnBook(int id) throws BookNotAvailableException {
+
+        for (int i = 0; i < count; i++) {
+
+            if (books[i].id == id) {
+
+                if (!books[i].isIssued) {
+                    throw new BookNotAvailableException("Book was not issued!");
+                }
+
+                books[i].isIssued = false;
+                System.out.println("Book returned successfully.");
+                return;
+            }
+        }
+        throw new BookNotAvailableException("Book not found!");
+    }
+    void displayBooks() {
+        System.out.println("\nLibrary Books:");
+        for (int i = 0; i < count; i++) {
+            System.out.println(
+                    "ID: " + books[i].id +
+                    " Title: " + books[i].title +
+                    " Issued: " + books[i].isIssued);
+        }
+    }
+}
+public class LibrarySystem {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        Library library = new Library();
+        int choice;
+        do {
+            System.out.println("\n---- Library Menu ----");
+            System.out.println("1 Add Book");
+            System.out.println("2 Issue Book");
+            System.out.println("3 Return Book");
+            System.out.println("4 Display Books");
+            System.out.println("5 Exit");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+            try {
+                switch (choice) {
+                    case 1:
+                        System.out.print("Enter Book ID: ");
+                        int id = sc.nextInt();
+                        sc.nextLine();
+                        System.out.print("Enter Book Title: ");
+                        String title = sc.nextLine();
+                        library.addBook(id, title);
+                        break;
+                    case 2:
+                        System.out.print("Enter Book ID to issue: ");
+                        int issueId = sc.nextInt();
+                        library.issueBook(issueId);
+                        break;
+                    case 3:
+                        System.out.print("Enter Book ID to return: ");
+                        int returnId = sc.nextInt();
+                        library.returnBook(returnId);
+                        break;
+                    case 4:
+                        library.displayBooks();
+                        break;
+                    case 5:
+                        System.out.println("Exiting program...");
+                        break;
+                    default:
+                        System.out.println("Invalid choice");
+                }
+            } catch (BookNotAvailableException e) {
+                System.out.println("Error: " + e.getMessage());
+            }
+        } while (choice != 5);
+        sc.close();
+    }
+}
