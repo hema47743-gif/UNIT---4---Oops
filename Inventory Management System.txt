@@ -1,0 +1,93 @@
+import java.util.*;
+public class InventorySystem {
+    static HashMap<String, Integer> inventory = new HashMap<>();
+    static Scanner sc = new Scanner(System.in);
+    public static void addProduct() {
+        try {
+            System.out.print("Enter Product Name: ");
+            String name = sc.nextLine();
+            System.out.print("Enter Quantity: ");
+            int qty = sc.nextInt();
+            sc.nextLine();
+            inventory.put(name, qty);
+            System.out.println("Product Added Successfully!");
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid quantity! Please enter a number.");
+            sc.nextLine();
+        }
+    }
+    public static void updateStock() {
+        try {
+            System.out.print("Enter Product Name: ");
+            String name = sc.nextLine();
+            if (inventory.containsKey(name)) {
+                System.out.print("Enter New Quantity: ");
+                int qty = sc.nextInt();
+                sc.nextLine();
+                inventory.put(name, qty);
+                System.out.println("Stock Updated Successfully!");
+            } else {
+                throw new Exception("Product Not Found!");
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public static void viewProduct() {
+        System.out.print("Enter Product Name: ");
+        String name = sc.nextLine();
+        if (inventory.containsKey(name)) {
+            System.out.println("Available Stock: " + inventory.get(name));
+        } else {
+            System.out.println("Product Not Found!");
+        }
+    }
+    public static void showInventory() {
+        if (inventory.isEmpty()) {
+            System.out.println("Inventory is Empty!");
+            return;
+        }
+        System.out.println("Inventory List");
+        for (Map.Entry<String, Integer> item : inventory.entrySet()) {
+            System.out.println(item.getKey() + " : " + item.getValue());
+        }
+    }
+    public static void main(String[] args) {
+        int choice;
+        while (true) {
+            System.out.println("INVENTORY SYSTEM");
+            System.out.println("1. Add Product");
+            System.out.println("2. Update Stock");
+            System.out.println("3. View Product");
+            System.out.println("4. Show Inventory");
+            System.out.println("5. Exit");
+            System.out.print("Enter your choice: ");
+            try {
+                choice = sc.nextInt();
+                sc.nextLine();
+                switch (choice) {
+                    case 1:
+                        addProduct();
+                        break;
+                    case 2:
+                        updateStock();
+                        break;
+                    case 3:
+                        viewProduct();
+                        break;
+                    case 4:
+                        showInventory();
+                        break;
+                    case 5:
+                        System.out.println("Exiting Inventory System...");
+                        System.exit(0);
+                    default:
+                        System.out.println("Invalid Choice!");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Please enter a valid number!");
+                sc.nextLine();
+            }
+        }
+    }
+}
